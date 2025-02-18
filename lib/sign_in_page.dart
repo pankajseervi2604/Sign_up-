@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,23 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  // firebase auth connecting
+  void createUserNameAndPassword() async {
+     try {
+    final userLogData = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailData.text.trim(),
+      password: passwordData.text.trim(),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("User created successfully!")),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(e.toString())),
+    );
+  }
+  }
+
   // setting the controller (which will retrve the data that user enters)
   final emailData = TextEditingController();
   final passwordData = TextEditingController();
@@ -154,6 +172,7 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                           );
                         }
+                        createUserNameAndPassword();
                       },
                       child: Text(
                         "Login",
