@@ -12,7 +12,19 @@ class _SignInPageState extends State<SignInPage> {
   // setting the controller (which will retrve the data that user enters)
   final emailData = TextEditingController();
   final passwordData = TextEditingController();
+  // changing the state of visibility of password
   bool obscureText = true;
+  // password error would be known
+  String? passwordError;
+
+  // the value will be provided by onchange property
+  void validatePassword(String value) {
+    setState(() {
+      passwordError = value.length <= 6
+          ? "Password must be at least 6 characters :("
+          : null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +113,23 @@ class _SignInPageState extends State<SignInPage> {
                           fontSize: 18,
                         ),
                       ),
+                      //setting up and conditions for user
+                      onChanged: validatePassword,
                     ),
+                    if (passwordError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            passwordError!,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
                     SizedBox(
                       height: 40,
                     ),
@@ -115,10 +143,17 @@ class _SignInPageState extends State<SignInPage> {
                         backgroundColor: Colors.red,
                       ),
                       onPressed: () {
-                        String userEmail = emailData.text.toString();
-                        String userPassword = passwordData.text;
-                        print("$userEmail passed");
-                        print("$userPassword passed");
+                        // setting the constraints for login button
+                        if (passwordError == null &&
+                            passwordData.text.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              showCloseIcon: true,
+                              content:
+                                  Text("Crenditials saved successfully..."),
+                            ),
+                          );
+                        }
                       },
                       child: Text(
                         "Login",
