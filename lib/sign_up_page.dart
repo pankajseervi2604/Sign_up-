@@ -14,8 +14,7 @@ class _SignInPageState extends State<SignUpPage> {
   // firebase auth connecting
   void createUserNameAndPassword() async {
     try {
-      final userLogData =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailData.text.trim(),
         password: passwordData.text.trim(),
       );
