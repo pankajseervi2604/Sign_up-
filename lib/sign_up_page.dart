@@ -1,35 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_practice_1/home_page.dart';
-import 'package:firebase_practice_1/sign_up_page.dart';
+import 'package:firebase_practice_1/sign_in_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignUpPage> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
-  // firebase sign_in process
-  Future loginUserWithEmailAndPassword() async {
+class _SignInPageState extends State<SignUpPage> {
+  // firebase auth connecting
+  void createUserNameAndPassword() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final userLogData =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailData.text.trim(),
         password: passwordData.text.trim(),
       );
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          showCloseIcon: true,
-          content: Text("Logged Successfully :>"),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          showCloseIcon: true,
-          content: Text(e.message.toString()),
+          content: Text("please fill the required fields first !!!"),
         ),
       );
     }
@@ -59,15 +52,11 @@ class _SignInPageState extends State<SignInPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Image.asset(
-                "assets/login_illusturation.png",
-                fit: BoxFit.fill,
-              ),
               SizedBox(
-                height: 10,
+                height: 300,
               ),
               Text(
-                "Welcome",
+                "Sign Up",
                 style: TextStyle(fontSize: 24),
               ),
               SizedBox(
@@ -172,11 +161,16 @@ class _SignInPageState extends State<SignInPage> {
                         // setting the constraints for login button
                         if (passwordError == null &&
                             passwordData.text.isNotEmpty) {
-                          loginUserWithEmailAndPassword();
+                          createUserNameAndPassword();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => SignInPage(),
+                            ),
+                          );
                         }
                       },
                       child: Text(
-                        "Login",
+                        "Create account",
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
@@ -185,24 +179,6 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     SizedBox(
                       height: 10,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => SignUpPage(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Sign up",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
                     ),
                   ],
                 ),
